@@ -6,6 +6,8 @@ from datetime import datetime
 import warnings
 warnings.filterwarnings('ignore')
 
+# Set-ExecutionPolicy RemoteSigned -Scope Process
+
 class RCliperModel:
     """
     Implementación del modelo R-CLIPER en Python
