@@ -7,6 +7,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 # Set-ExecutionPolicy RemoteSigned -Scope Process
+# Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 class RCliperModel:
     """
