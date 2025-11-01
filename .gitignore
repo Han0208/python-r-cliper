@@ -32,7 +32,7 @@ MANIFEST
 # result/
 # *.csv
 # *.png
-
+historical_data/
 # Archivos del sistema
 .DS_Store
 Thumbs.db
