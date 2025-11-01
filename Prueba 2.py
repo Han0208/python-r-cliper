@@ -13,9 +13,12 @@ import matplotlib.pyplot as plt
 # 1️⃣ CONFIGURACIÓN INICIAL
 # =====================================================
 
-# Carpeta con tus archivos CSV
-input_folder = "daD:\Tesis\tesis_carlos\Datos Historicos/"       # <-- Cambia por tu ruta
-output_folder = "D:\Tesis\tesis_carlos\Resultados/"       # Carpeta de salida
+# Obtener el directorio donde está este script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Carpeta con tus archivos CSV (relativa al script)
+input_folder = os.path.join(script_dir, "historical_data")
+output_folder = os.path.join(script_dir, "result")       # Carpeta de salida
 
 os.makedirs(output_folder, exist_ok=True)
 
@@ -49,13 +52,25 @@ def r_cliper(Vm, r):
 # =====================================================
 # 4️⃣ LECTURA Y PROCESAMIENTO DE ARCHIVOS
 # =====================================================
-files = [f for f in os.listdir(input_folder) if f.endswith('.csv')]
+# Buscar archivos CSV y XLSX
+files = [f for f in os.listdir(input_folder) if f.endswith(('.csv', '.xlsx', '.xls'))]
+
+print(f"Archivos encontrados: {files}")
 
 for file in files:
     path = os.path.join(input_folder, file)
-    df = pd.read_csv(path)
-
-    # Asegurar nombres coherentes
+    
+    # Leer archivo según su extensión
+    if file.endswith('.csv'):
+        df = pd.read_csv(path)
+    elif file.endswith(('.xlsx', '.xls')):
+        df = pd.read_excel(path, engine='openpyxl')
+    
+    print(f"Procesando {file} - Shape: {df.shape}")
+    print(f"Columnas originales: {list(df.columns)}")
+    
+    # Seleccionar solo las primeras 7 columnas y asegurar nombres coherentes
+    df = df.iloc[:, :7]  # Tomar solo las primeras 7 columnas
     df.columns = ["Fecha", "Time", "RMAX", "X", "Y", "VMAX", "PC"]
 
     # Convertir VMAX a m/s si está en nudos
@@ -80,7 +95,11 @@ for file in files:
             "Pico_lluvia_mm_h": np.max(T)
         })
 
+
+    print(f"{resultados=}")
+
     resultados_df = pd.DataFrame(resultados)
+    print(f"{resultados_df=}")
 
     # Guardar resultados numéricos
     nombre_evento = os.path.splitext(file)[0]
